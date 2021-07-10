@@ -2,8 +2,9 @@ import pandas as pd
 from google.cloud.sql.connector import connector
 import sqlalchemy
 from dotenv import load_dotenv
+import os
 
-#"CREATE TABLE IF NOT EXISTS portfolio_actions (action_date DATETIME, user VARCHAR(140), action VARCHAR(140), amount FLOAT(10), ticker VARCHAR(140), price FLOAT(10));"
+#"CREATE TABLE portfolio_actions (action_date TIMESTAMP, username VARCHAR(140), action VARCHAR(140), amount FLOAT(10), ticker VARCHAR(140), price FLOAT(10));"
 
 #Implementation of required functions for data retrieval and verification using MySQL server
 class Database:
@@ -23,11 +24,14 @@ class Database:
                 username=os.environ.get('DB_USER'),
                 password=os.environ.get('DB_PASS'),
                 database=os.environ.get('DB_NAME'),
+                query={
+                    "unix_sock":"/cloudsql/{}/./s.PGSQL.5432".format(os.environ.get("CLOUD_SQL_CONNECTION_NAME"))
+                }
             ),
             **my_config
         )
         conn.dialect.description_encoding = None
-        self.cursor = conn
+        self.cursor = conn.connect()
         
     def init_db_connection(self):
         db_config = {
