@@ -9,24 +9,24 @@ class Database:
     def __init__(self):
         self.positions = "open_positions.csv"
         self.db = mysql.connector.connect(
-			host="34.95.55.18",
-			user="root",
-			passwd="password",
-			database="portfolio_actions"
-		)
-		self.cursor = self.db.cursor()
+            host="34.95.55.18",
+            user="root",
+            passwd="password",
+            database="portfolio_actions"
+        )
+        self.cursor = self.db.cursor()
         
     def update_position(self, user, action, amount, ticker, price):
         sql = "INSERT INTO portfolio_actions (action_date, user, action, amount, ticker) VALUES (%s, %s, %s, %s, %s)"
-		self.cursor.execute(sql, values)
-		self.db.commit()
+        self.cursor.execute(sql, values)
+        self.db.commit()
         return 200
-		
+        
     
     def show_positions(self, user=None):
         sql = "SELECT * FROM portfolio_actions"
-		self.cursor.execute(sql, values)
-		result = self.cursor.fetchall()
+        self.cursor.execute(sql, values)
+        result = self.cursor.fetchall()
         df = pd.DataFrame(result)
         if user is not None:
             df = df.loc[df["user"]==user]
@@ -36,8 +36,8 @@ class Database:
         
     def show_owns(self, ticker):
         sql = "SELECT * FROM portfolio_actions"
-		self.cursor.execute(sql, values)
-		result = self.cursor.fetchall()
+        self.cursor.execute(sql, values)
+        result = self.cursor.fetchall()
         df = pd.DataFrame(result)
         df = df.loc[df["ticker"]==ticker]
         df.groupby(["user","ticker"]).sum()["amount"]
