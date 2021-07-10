@@ -15,13 +15,13 @@ class Database:
             database="portfolio_actions"
         )
         self.cursor = self.db.cursor()
-        
+    
     def update_position(self, user, action, amount, ticker, price):
         sql = "INSERT INTO portfolio_actions (action_date, user, action, amount, ticker) VALUES (%s, %s, %s, %s, %s)"
         self.cursor.execute(sql, values)
         self.db.commit()
         return 200
-        
+     
     
     def show_positions(self, user=None):
         sql = "SELECT * FROM portfolio_actions"
@@ -33,7 +33,7 @@ class Database:
         df.groupby(["user","ticker"]).sum()["amount"]
         df.to_csv(user + "_" + self.positions, index=False)
         return self.db_url + user + "_" + self.positions
-        
+    
     def show_owns(self, ticker):
         sql = "SELECT * FROM portfolio_actions"
         self.cursor.execute(sql, values)
