@@ -1,5 +1,5 @@
 import pandas as pd
-import mysql.connector
+from google.cloud.sql.connector import connector
 
 #"CREATE TABLE IF NOT EXISTS portfolio_actions (action_date DATETIME, user VARCHAR(140), action VARCHAR(140), amount FLOAT(10), ticker VARCHAR(140), price FLOAT(10));"
 
@@ -8,8 +8,9 @@ class Database:
     #replace variables with appropriate credentials
     def __init__(self):
         self.positions = "open_positions.csv"
-        self.db = mysql.connector.connect(
-            host="34.95.55.18",
+        self.db = connector.connect(
+            "project:region:instance",
+            "pymysql",
             user="root",
             passwd="password",
             database="portfolio_actions"
