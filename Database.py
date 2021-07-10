@@ -1,5 +1,7 @@
 import pandas as pd
 from google.cloud.sql.connector import connector
+import sqlalchemy
+from dotenv import load_dotenv
 
 #"CREATE TABLE IF NOT EXISTS portfolio_actions (action_date DATETIME, user VARCHAR(140), action VARCHAR(140), amount FLOAT(10), ticker VARCHAR(140), price FLOAT(10));"
 
@@ -7,15 +9,48 @@ from google.cloud.sql.connector import connector
 class Database:
     #replace variables with appropriate credentials
     def __init__(self):
-        self.positions = "open_positions.csv"
-        self.db = connector.connect(
-            "project:region:instance",
-            "pymysql",
-            user="root",
-            passwd="password",
-            database="portfolio_actions"
+        load_dotenv()
+        db_config = {
+            'pool_size': 5,
+            'max_overflow': 2,
+            'pool_timeout': 30,
+            'pool_recycle': 1800,
+        }
+
+        conn = sqlalchemy.create_engine(
+            sqlalchemy.engine.url.URL(
+                drivername="pymsql",
+                username=os.environ.get('DB_USER'),
+                password=os.environ.get('DB_PASS'),
+                database=os.environ.get('DB_NAME'),
+            ),
+            **my_config
         )
-        self.cursor = self.db.cursor()
+        conn.dialect.description_encoding = None
+        self.cursor = conn
+        
+    def init_db_connection(self):
+        db_config = {
+            'pool_size': 5,
+            'max_overflow': 2,
+            'pool_timeout': 30,
+            'pool_recycle': 1800,
+        }
+        return init_unix_connection_engine(db_config)
+
+    def init_unix_connection_engine(self, db_config):
+        pool = sqlalchemy.create_engine(
+            sqlalchemy.engine.url.URL(
+                drivername="postgres+pg8000",
+                host=os.environ.get('DB_HOST'),
+                port=os.environ.get('DB_PORT'),
+                username=os.environ.get('DB_USER'),
+                password=os.environ.get('DB_PASS'),
+                database=os.environ.get('DB_NAME'),
+            ),
+            **db_config
+        )
+        pool.dialect.description_encoding = None
     
     def update_position(self, user, action, amount, ticker, price):
         sql = "INSERT INTO portfolio_actions (action_date, user, action, amount, ticker) VALUES (%s, %s, %s, %s, %s)"
