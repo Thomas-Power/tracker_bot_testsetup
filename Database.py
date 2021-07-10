@@ -20,7 +20,7 @@ class Database:
 
         conn = sqlalchemy.create_engine(
             sqlalchemy.engine.url.URL(
-                drivername="pymsql",
+                drivername="postgres+pg8000",
                 username=os.environ.get('DB_USER'),
                 password=os.environ.get('DB_PASS'),
                 database=os.environ.get('DB_NAME'),
