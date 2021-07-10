@@ -30,6 +30,7 @@ COPY . ./
 # Install production dependencies.
 RUN pip install Flask gunicorn
 RUN pip install pandas gunicorn
+RUN pip install --upgrade google-api-python-client
 RUN pip install cloud-sql-python-connector[pymsql]
 
 # Run the web service on container startup. Here we use the gunicorn
