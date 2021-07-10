@@ -1,5 +1,4 @@
 import pandas as pd
-from google.cloud.sql.connector import connector
 import sqlalchemy
 from dotenv import load_dotenv
 import os
