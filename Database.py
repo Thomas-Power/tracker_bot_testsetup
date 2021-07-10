@@ -27,33 +27,10 @@ class Database:
                     "unix_sock":"/cloudsql/{}/./s.PGSQL.5432".format(os.environ.get("CLOUD_SQL_CONNECTION_NAME"))
                 }
             ),
-            **my_config
+            **db_config
         )
         conn.dialect.description_encoding = None
         self.cursor = conn.connect()
-        
-    def init_db_connection(self):
-        db_config = {
-            'pool_size': 5,
-            'max_overflow': 2,
-            'pool_timeout': 30,
-            'pool_recycle': 1800,
-        }
-        return init_unix_connection_engine(db_config)
-
-    def init_unix_connection_engine(self, db_config):
-        pool = sqlalchemy.create_engine(
-            sqlalchemy.engine.url.URL(
-                drivername="postgres+pg8000",
-                host=os.environ.get('DB_HOST'),
-                port=os.environ.get('DB_PORT'),
-                username=os.environ.get('DB_USER'),
-                password=os.environ.get('DB_PASS'),
-                database=os.environ.get('DB_NAME'),
-            ),
-            **db_config
-        )
-        pool.dialect.description_encoding = None
     
     def update_position(self, user, action, amount, ticker, price):
         sql = "INSERT INTO portfolio_actions (action_date, user, action, amount, ticker) VALUES (%s, %s, %s, %s, %s)"
