@@ -10,9 +10,12 @@ class DatabaseAdapter:
 
     def update_position(self, user, action, amount, ticker, price):
         return self.db.update_position(user, action, amount, ticker, price)
-        
-    def show_positions(self, user):
+      
+    def show_all(self):
+        return self.db.show_all()
+      
+    def show_user(self, user):
         return self.db.show_positions(user)
         
-    def show_owns(self, ticker):
-        return self.db.show_owns(ticker)
+    def show_ticker(self, ticker):
+        return self.db.show_ticker(ticker)

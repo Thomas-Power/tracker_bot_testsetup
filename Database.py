@@ -1,6 +1,5 @@
 import pandas as pd
-from sqlalchemy import create_engine
-from dotenv import load_dotenv
+import sqlalchemy
 import os
 
 #"CREATE TABLE portfolio_actions (action_date TIMESTAMP, username VARCHAR(140), action VARCHAR(140), amount FLOAT(10), ticker VARCHAR(140), price FLOAT(10));"
@@ -11,35 +10,43 @@ import os
 class Database:
     #replace variables with appropriate credentials
     def __init__(self):
-        load_dotenv()
-        conn = engine = create_engine('sqlite:///sqlite3.db')
-        self.cursor = conn.connect()
-        self.cursor.execute("CREATE TABLE portfolio_actions (action_date TIMESTAMP, username VARCHAR(140), action VARCHAR(140), amount FLOAT(10), ticker VARCHAR(140), price FLOAT(10));")
+        self.db_url = ""
+        self.engine = sqlalchemy.create_engine('sqlite:///database.db')
+        with self.engine.connect("database.db") as con:
+            con.execute("CREATE TABLE IF NOT EXISTS portfolio_actions (action_date TIMESTAMP, username VARCHAR(140), action VARCHAR(140), amount FLOAT(10), ticker VARCHAR(140), price FLOAT(10));")
     
     def update_position(self, user, action, amount, ticker, price):
-        sql = "INSERT INTO portfolio_actions (action_date, username, action, amount, ticker) VALUES (current_timestamp, %s, %s, %s, %s)"
-        self.cursor.execute(sql, values)
-        self.db.commit()
-        return 200
-     
+        with self.engine.connect("database.db") as con:
+            sql = "INSERT INTO portfolio_actions (action_date, username, action, amount, ticker, price) VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?)"
+            con.execute(sql, [user, action, amount, ticker, price])
+            return 200
     
-    def show_positions(self, user=None):
-        sql = "SELECT * FROM portfolio_actions"
-        self.cursor.execute(sql, values)
-        result = self.cursor.fetchall()
-        df = pd.DataFrame(result)
-        if user is not None:
-            df = df.loc[df["user"]==user]
-        df.groupby(["user","ticker"]).sum()["amount"]
-        df.to_csv(user + "_" + self.positions, index=False)
-        return self.db_url + user + "_" + self.positions
+    def show_all(self):
+        with self.engine.connect("database.db") as con:
+            sql = "SELECT * FROM portfolio_actions"
+            result = con.execute(sql)
+            df = pd.DataFrame(result)
+            df.columns = ["action_date", "username", "action", "amount", "ticker", "price"]
+            df = df.groupby(["username","ticker"]).sum()["amount"]
+            return pd.DataFrame(df).to_html()
     
-    def show_owns(self, ticker):
-        sql = "SELECT * FROM portfolio_actions"
-        self.cursor.execute(sql, values)
-        result = self.cursor.fetchall()
-        df = pd.DataFrame(result)
-        df = df.loc[df["ticker"]==ticker]
-        df.groupby(["user","ticker"]).sum()["amount"]
-        df.to_csv(ticker + "_" + self.positions, index=False)
-        return self.db_url + ticker + "_" + self.positions
+    
+    def show_user(self, user):
+        with self.engine.connect("database.db") as con:
+            sql = "SELECT * FROM portfolio_actions"
+            result = con.execute(sql)
+            df = pd.DataFrame(result)
+            df.columns = ["action_date", "username", "action", "amount", "ticker", "price"]
+            df = df.loc[df["username"]==user]
+            df = df.groupby(["username","ticker"]).sum()["amount"]
+            return pd.DataFrame(df.to_html()).to_html()
+
+    def show_ticker(self, ticker):
+        with self.engine.connect("database.db") as con:
+            sql = "SELECT * FROM portfolio_actions"
+            result = con.execute(sql)
+            df = pd.DataFrame(result)
+            df.columns = ["action_date", "username", "action", "amount", "ticker", "price"]
+            df = df.loc[df["ticker"]==ticker]
+            df = df.groupby(["user","ticker"]).sum()["amount"]
+            return pd.DataFrame(df).to_html()
