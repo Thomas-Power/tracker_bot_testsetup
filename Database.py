@@ -12,8 +12,9 @@ class Database:
     #replace variables with appropriate credentials
     def __init__(self):
         load_dotenv()
-        conn = create_engine("postgresql://root:password@/portfolio_actions?unix_sock=cloudsql/trackerbot-319119:northamerica-northeast1:my-ptsql/.s.PGSQL.5432")
+        conn = engine = create_engine('sqlite:///sqlite3.db')
         self.cursor = conn.connect()
+        self.cursor.execute("CREATE TABLE portfolio_actions (action_date TIMESTAMP, username VARCHAR(140), action VARCHAR(140), amount FLOAT(10), ticker VARCHAR(140), price FLOAT(10));")
     
     def update_position(self, user, action, amount, ticker, price):
         sql = "INSERT INTO portfolio_actions (action_date, username, action, amount, ticker) VALUES (current_timestamp, %s, %s, %s, %s)"
