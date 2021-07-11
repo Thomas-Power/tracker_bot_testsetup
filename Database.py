@@ -10,30 +10,11 @@ class Database:
     #replace variables with appropriate credentials
     def __init__(self):
         load_dotenv()
-        db_config = {
-            'pool_size': 5,
-            'max_overflow': 2,
-            'pool_timeout': 30,
-            'pool_recycle': 1800,
-        }
-
-        conn = sqlalchemy.create_engine(
-            sqlalchemy.engine.url.URL(
-                drivername="postgres+pg8000",
-                username=os.environ.get('DB_USER'),
-                password=os.environ.get('DB_PASS'),
-                database=os.environ.get('DB_NAME'),
-                query={
-                    "unix_sock":"/cloudsql/{}/./s.PGSQL.5432".format(os.environ.get("CLOUD_SQL_CONNECTION_NAME"))
-                }
-            ),
-            **db_config
-        )
-        conn.dialect.description_encoding = None
+        conn = sqlalchemy.create_engine("postgresql+pg8000://root:password@34.152.25.22/portfolio_actions")
         self.cursor = conn.connect()
     
     def update_position(self, user, action, amount, ticker, price):
-        sql = "INSERT INTO portfolio_actions (action_date, user, action, amount, ticker) VALUES (%s, %s, %s, %s, %s)"
+        sql = "INSERT INTO portfolio_actions (action_date, username, action, amount, ticker) VALUES (current_timestamp, %s, %s, %s, %s)"
         self.cursor.execute(sql, values)
         self.db.commit()
         return 200
