@@ -45,5 +45,5 @@ def show_ticker():
         return "Python error"
 
 if __name__ == '__main__':
-    app.config['api_key'] = '1899234700:AAF-8-vXDtSJ6jJHPnSfsCLfCVAGe3StKEw'
-    app.poll(debug=True)
+    bot.config['api_key'] = '1899234700:AAF-8-vXDtSJ6jJHPnSfsCLfCVAGe3StKEw'
+    bot.poll(debug=True)
