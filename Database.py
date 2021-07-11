@@ -19,7 +19,7 @@ class Database:
         with self.engine.connect("database.db") as con:
             sql = "INSERT INTO portfolio_actions (action_date, username, action, amount, ticker, price) VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?)"
             con.execute(sql, [user, action, amount, ticker, price])
-            return 200
+            return "Success"
     
     def show_all(self):
         with self.engine.connect("database.db") as con:
