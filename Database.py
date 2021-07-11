@@ -6,11 +6,13 @@ import os
 #"CREATE TABLE portfolio_actions (action_date TIMESTAMP, username VARCHAR(140), action VARCHAR(140), amount FLOAT(10), ticker VARCHAR(140), price FLOAT(10));"
 
 #Implementation of required functions for data retrieval and verification using MySQL server
+
+#postgresql://root:password@/portfolio_actions?unix_sock=cloudsql/trackerbot-319119:northamerica-northeast1:my-ptsql/.s.PGSQL.5432
 class Database:
     #replace variables with appropriate credentials
     def __init__(self):
         load_dotenv()
-        conn = create_engine("postgresql:///root:password@34.152.25.22/portfolio_actions")
+        conn = create_engine("postgresql://root:password@/portfolio_actions?unix_sock=cloudsql/trackerbot-319119:northamerica-northeast1:my-ptsql/.s.PGSQL.5432")
         self.cursor = conn.connect()
     
     def update_position(self, user, action, amount, ticker, price):
