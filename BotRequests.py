@@ -11,13 +11,13 @@ class BotRequests:
         self.db = DatabaseAdapter()
     
 #https://trackerbot-service-test-gmnto3bl6a-nn.a.run.app//update_position?username=me&action=bought&amount=100&ticker=BTC&price=40000    
-    def update_position(self, data):
+    def update_position(self, data, username):
         #try:
-        user = data.get("username")
-        action = data.get("action").lower()
-        amount = data.get("amount")
-        ticker = data.get("ticker").lower()
-        price = data.get("price")
+        user = username
+        action = data[0].lower()
+        amount = data[1]
+        ticker = data[2].lower()
+        price = data[3]
         if action == "buy":
             action =="bought"
         if action == "sell":
@@ -34,16 +34,14 @@ class BotRequests:
         #except:
         #    return 404
        
-    def show_user(self, data):
+    def show_user(self, user):
         #try:
-        user = data.get("username")
         return self.db.show_user(user)
         #except:
         #    return 404
         
-    def show_ticker(self, data):
+    def show_ticker(self, ticker):
         #try:
-        ticker = data.get("ticker")
         return self.db.show_ticker(ticker)
         #except:
         #    return 404
