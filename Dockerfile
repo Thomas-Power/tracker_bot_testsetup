@@ -31,7 +31,7 @@ COPY . ./
 RUN pip install Flask gunicorn
 RUN pip install pandas gunicorn
 RUN pip install python-dotenv
-RUN pip install SQLAlchemy==1.3.24
+RUN pip install SQLAlchemy
 
 # Run the web service on container startup. Here we use the gunicorn
 # webserver, with one worker process and 8 threads.
