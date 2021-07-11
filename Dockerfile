@@ -28,7 +28,7 @@ WORKDIR $APP_HOME
 COPY . ./
 
 # Install production dependencies.
-RUN pip install Flask gunicorn
+RUN pip install telebot
 RUN pip install pandas gunicorn
 RUN pip install python-dotenv
 RUN pip install SQLAlchemy
