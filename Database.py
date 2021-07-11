@@ -1,5 +1,5 @@
 import pandas as pd
-import sqlalchemy
+from sqlalchemy import create_engine
 from dotenv import load_dotenv
 import os
 
@@ -10,7 +10,7 @@ class Database:
     #replace variables with appropriate credentials
     def __init__(self):
         load_dotenv()
-        conn = sqlalchemy.create_engine("postgresql+pg8000://root:password@34.152.25.22/portfolio_actions")
+        conn = sqlalchemy.create_engine("postgresql+pg8000:///root:password@34.152.25.22/portfolio_actions")
         self.cursor = conn.connect()
     
     def update_position(self, user, action, amount, ticker, price):
