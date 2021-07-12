@@ -39,7 +39,7 @@ def show_all():
         bot.reply_to("Python error")
         #bot.send_message(chat_dest, "Python error")
 
-@bot.route(commands=['show_ticker'])
+@bot.message_handler(commands=['show_ticker'])
 def show_ticker():
     try:
         data = message["text"]
