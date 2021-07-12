@@ -28,6 +28,7 @@ WORKDIR $APP_HOME
 COPY . ./
 
 # Install production dependencies.
+RUN pip install flask gunicorn
 RUN pip install pyTelegramBotAPI gunicorn
 RUN pip install pandas gunicorn
 RUN pip install SQLAlchemy gunicorn
