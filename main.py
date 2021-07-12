@@ -2,10 +2,10 @@ from BotRequests import BotRequests
 import telebot
 from flask import Flask
 
-bot = telebot.TeleBot('1899234700:AAF-8-vXDtSJ6jJHPnSfsCLfCVAGe3StKEw')
+bot = telebot.TeleBot('1899234700:AAF-8-vXDtSJ6jJHPnSfsCLfCVAGe3StKEw', threaded=False)
+app = Flask(__name__)
 
 bot_requests = BotRequests()
-app = Flask(__name__)
 
 @bot.message_handler(commands=['update_position'])
 def update_position(message):
