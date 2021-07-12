@@ -13,18 +13,19 @@ class BotRequests:
 #https://trackerbot-service-test-gmnto3bl6a-nn.a.run.app//update_position?username=me&action=bought&amount=100&ticker=BTC&price=40000    
     def update_position(self, data, username):
         #try:
-        user = username
+        user = username.upper()
         action = data[0].lower()
         amount = data[1]
-        ticker = data[2].lower()
+        ticker = data[2].upper()
         price = data[3]
         if action == "buy":
-            action =="bought"
+            return self.db.update_position(user, "bought", amount, ticker, price)
+        if action == "bought":
+            return self.db.update_position(user, "bought", amount, ticker, price)
         if action == "sell":
-            action == "sold"
+            return self.db.update_position(user, "sold", str(float(amount)*-1), ticker, price)
         if action == "sold":
-            amount = amount*-1
-        return self.db.update_position(user, action, amount, ticker, price)
+            return self.db.update_position(user, "sold", str(float(amount)*-1), ticker, price)
         #except:
         #    return 404
        

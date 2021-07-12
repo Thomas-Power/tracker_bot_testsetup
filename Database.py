@@ -28,7 +28,7 @@ class Database:
             df = pd.DataFrame(result)
             df.columns = ["action_date", "username", "action", "amount", "ticker", "price"]
             df = df.groupby(["username","ticker"]).sum()["amount"]
-            return pd.DataFrame(df).to_html()
+            return pd.DataFrame(df).to_string()
     
     
     def show_user(self, user):
@@ -39,7 +39,7 @@ class Database:
             df.columns = ["action_date", "username", "action", "amount", "ticker", "price"]
             df = df.loc[df["username"]==user]
             df = df.groupby(["username","ticker"]).sum()["amount"]
-            return pd.DataFrame(df.to_html()).to_html()
+            return pd.DataFrame(df).to_string()
 
     def show_ticker(self, ticker):
         with self.engine.connect("database.db") as con:
@@ -47,6 +47,7 @@ class Database:
             result = con.execute(sql)
             df = pd.DataFrame(result)
             df.columns = ["action_date", "username", "action", "amount", "ticker", "price"]
+            print(df)
             df = df.loc[df["ticker"]==ticker]
-            df = df.groupby(["user","ticker"]).sum()["amount"]
-            return pd.DataFrame(df).to_html()
+            df = df.groupby(["username","ticker"]).sum()["amount"]
+            return pd.DataFrame(df).to_string()
