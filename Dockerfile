@@ -28,10 +28,9 @@ WORKDIR $APP_HOME
 COPY . ./
 
 # Install production dependencies.
-RUN pip install pyTelegramBotAPI
+RUN pip install pyTelegramBotAPI gunicorn
 RUN pip install pandas gunicorn
-RUN pip install python-dotenv
-RUN pip install SQLAlchemy
+RUN pip install SQLAlchemy gunicorn
 
 # Run the web service on container startup. Here we use the gunicorn
 # webserver, with one worker process and 8 threads.
